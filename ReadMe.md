@@ -43,9 +43,9 @@ Including software information and author information, welcome to reward~
 
 ## Maintainers
 
-[@RobbEr's blog]（ https://robber.ltd )
+[@RobbEr's blog](https://robber.ltd)
 
-[@RobbEr's GitHub]（ https://github.com/RobbEr929 )
+[@RobbEr's GitHub](https://github.com/RobbEr929)
 
 ## License
 [MIT](./LICENSE) © Zhong Chun
