@@ -2,7 +2,7 @@
 
 For graduation design. Desktop file retrieval software based on windows can realize rapid retrieval and monitoring of files.
 
-Using C + + language, based on cpp17, Qt5 12.12, visual studio 2019, Microsoft's USN log system, development completed.
+Using C++ language, based on cpp17, Qt5.12.12, Visual Studio 2019, Microsoft's USN log system, development completed.
 
 ## Install
 
