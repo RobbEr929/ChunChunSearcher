@@ -41,3 +41,5 @@
 ## 开源协议
 [MIT](./LICENSE) © 钟淳
 
+## 更新开发环境为VS2022
+如有运行库不适配请联系作者，详见[Github主页](https://github.com/RobbEr929)
