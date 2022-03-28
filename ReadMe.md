@@ -4,6 +4,10 @@ For graduation design. Desktop file retrieval software based on windows can real
 
 Using C++ language, based on cpp17, Qt5.12.12, Visual Studio 2019, Microsoft's USN log system, development completed.
 
+## current version
+
+V1.1.0.
+
 ## Install
 
 Click `ChunChunSearcher.msi`, install as required.
@@ -18,13 +22,19 @@ The search result list can be **quickly opened, copied path, deleted and viewed 
 
 According to the test, the resident memory of about 100k entries is about 40m, 600k is 100m and 1.8m entries about 300m.
 
+### V 1.1.0 Update
 
+Add login and registration functions, try the cloud platform interface online synchronization settings, the cloud platform uses PHPLaravel as the back-end framework, and the code is in the warehouse.
 
 ## Set
 
 ### General settings
+
 You can set background operation, tray display, automatic update and prompt information.
 
+#### V1.1.0 update
+
+Added the function of disabling cloud platform, which is consistent with 1.0.0 after disabling.
 ### Retrieval settings
 1. Case matching: when enabled, the strict case will be retrieved;
 2. Matching path: when enabled, the file path will be retrieved (**which will significantly slow down the search speed**);
@@ -48,4 +58,9 @@ Including software information and author information, welcome to reward~
 [@RobbEr's GitHub](https://github.com/RobbEr929)
 
 ## License
+
 [MIT](./LICENSE) © Zhong Chun
+
+## Update the development environment to VS2022
+
+If the runtime library is not suitable, please contact the author, see [Github homepage](https://github.com/RobbEr929)
