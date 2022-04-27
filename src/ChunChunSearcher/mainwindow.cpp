@@ -701,7 +701,7 @@ void MainWindow::InitOption()
 	laba_4->move(options[2]->width() * 0.05, options[2]->width() * 0.65);
 
 	QLabel* laba_4_p = new QLabel(options[2]);
-	laba_4_p->setText(QString("<a href=\"https://github.com/RobbEr929\"><img src=%1 width=%2 height=%3></a>").arg(QApplication::applicationDirPath() % "/source/github.png").arg(options[2]->width() * 0.19).arg(options[2]->width() * 0.19));
+	laba_4_p->setText(QString("<a href=\"https://github.com/RobbEr929\"><img src=%1 width=%2 height=%3></a>").arg("./source/github.png").arg(options[2]->width() * 0.19).arg(options[2]->width() * 0.19));
 	laba_4_p->setOpenExternalLinks(true);
 	laba_4_p->setToolTip(QStringLiteral("点击访问"));
 	laba_4_p->move(options[2]->width() * 0.1 + 60, options[2]->width() * 0.58);
@@ -713,7 +713,7 @@ void MainWindow::InitOption()
 	laba_5->move(options[2]->width() * 0.6, options[2]->width() * 0.65);
 
 	QLabel* laba_5_p = new QLabel(options[2]);
-	laba_5_p->setText(QString("<a href=\"https://robber.ltd/\"><img src=%1 width=%2 height=%3></a>").arg(QApplication::applicationDirPath() % "/source/blog.png").arg(options[2]->width() * 0.19).arg(options[2]->width() * 0.19));
+	laba_5_p->setText(QString("<a href=\"https://robber.ltd/\"><img src=%1 width=%2 height=%3></a>").arg("./source/blog.png").arg(options[2]->width() * 0.19).arg(options[2]->width() * 0.19));
 	laba_5_p->setOpenExternalLinks(true);
 	laba_5_p->setToolTip(QStringLiteral("点击访问"));
 	laba_5_p->move(options[2]->width() * 0.6 + 40, options[2]->width() * 0.6);
@@ -725,7 +725,7 @@ void MainWindow::InitOption()
 	laba_6->move(options[2]->width() * 0.2, options[2]->width() * 0.8);
 
 	laba_7 = new QLabel(options[2]);
-	laba_7->setText(QString("<img src=%1 width=%2 height=%3>").arg(QApplication::applicationDirPath() % "/source/ali.png").arg(options[2]->width() * 0.12).arg(options[2]->width() * 0.12));
+	laba_7->setPixmap(QPixmap::fromImage(QImage(QApplication::applicationDirPath() % "/source/ali.png")).scaled(options[2]->width() * 0.12, options[2]->width() * 0.12));
 	laba_7->setOpenExternalLinks(true);
 	laba_7->setFont(QFont("Microsoft YaHei", 10, 75));
 	laba_7->setAlignment(Qt::AlignCenter);
@@ -733,7 +733,7 @@ void MainWindow::InitOption()
 	laba_7->installEventFilter(this);
 
 	laba_8 = new QLabel(options[2]);
-	laba_8->setText(QString("<img src=%1 width=%2 height=%3>").arg(QApplication::applicationDirPath() % "/source/wechat.png").arg(options[2]->width() * 0.12).arg(options[2]->width() * 0.12));
+	laba_8->setPixmap(QPixmap::fromImage(QImage(QApplication::applicationDirPath() % "/source/wechat.png")).scaled(options[2]->width() * 0.12, options[2]->width() * 0.12));
 	laba_8->setOpenExternalLinks(true);
 	laba_8->setFont(QFont("Microsoft YaHei", 10, 75));
 	laba_8->setAlignment(Qt::AlignCenter);
@@ -741,7 +741,7 @@ void MainWindow::InitOption()
 	laba_8->installEventFilter(this);
 
 	laba_9 = new QLabel(options[2]);
-	laba_9->setText(QString("<img src=%1 width=%2 height=%3>").arg(QApplication::applicationDirPath() % "/source/alipay.png").arg(options[2]->width() * 0.6).arg(options[2]->width() * 0.6));
+	laba_9->setPixmap(QPixmap::fromImage(QImage(QApplication::applicationDirPath() % "/source/alipay.png")).scaled(options[2]->width() * 0.6, options[2]->width() * 0.6));
 	laba_9->setOpenExternalLinks(true);
 	laba_9->setFont(QFont("Microsoft YaHei", 10, 75));
 	laba_9->setAlignment(Qt::AlignCenter);
@@ -750,7 +750,7 @@ void MainWindow::InitOption()
 	laba_9->setVisible(false);
 
 	laba_10 = new QLabel(options[2]);
-	laba_10->setText(QString("<img src=%1 width=%2 height=%3>").arg(QApplication::applicationDirPath() % "/source/wechatpay.png").arg(options[2]->width() * 0.6).arg(options[2]->width() * 0.6));
+	laba_10->setPixmap(QPixmap::fromImage(QImage(QApplication::applicationDirPath() % "/source/wechatpay.png")).scaled(options[2]->width() * 0.6, options[2]->width() * 0.6));
 	laba_10->setOpenExternalLinks(true);
 	laba_10->setFont(QFont("Microsoft YaHei", 10, 75));
 	laba_10->setAlignment(Qt::AlignCenter);
