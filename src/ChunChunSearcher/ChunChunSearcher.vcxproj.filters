@@ -73,6 +73,12 @@
     <ClCompile Include="communicate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="myserver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="myclient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="global.h">
@@ -119,6 +125,12 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="communicate.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="myserver.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="myclient.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

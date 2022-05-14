@@ -3,9 +3,13 @@
 For graduation design. Desktop file retrieval software based on windows can realize rapid retrieval and monitoring of files.
 
 Using C++ language, based on cpp17, Qt5.12.12, Visual Studio 2019, Microsoft's USN log system, development completed.
-## CurrentVersion V1.1.0
-
-The login and registration functions are updated, based on the cloud platform interface, the backend uses PHPLaravel, and the database is MySQL.
+## Current version V1.2.0
+- Added cloud disk function, cloud disk is divided into personal cloud disk and organizational cloud disk. After logging in, you can upload and download files. The default download path is `installation path/download/username`;
+- Added organization function, you can create and join organizations. Organization members have four kinds of permissions, namely `member`, `file administrator`, `member administrator`, and `organization creator` permissions increase in order;
+- Added chat room function, one device needs to open the server, other devices can connect to the server through ip to realize the chat function;
+- Temporarily update here~
+### Version V1.1.0 Update
+Added login and registration functions, based on the cloud platform interface, through the `Http` request `RESTful Api` call, the backend uses the `PHPLaravel` framework, and the database is `MySQL`.
 
 ## Install
 

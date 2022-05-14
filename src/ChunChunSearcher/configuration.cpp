@@ -6,7 +6,13 @@
 #include <QFile>
 bool Configuration::isSigned = false;
 bool Configuration::autoSign = false;
-QString Configuration::serverAddress = "http://47.95.214.101:929/api/ccs/";
+QString Configuration::serverAddress = "";
+int Configuration::userid = 0;
+int Configuration::power = 0;
+int Configuration::organizationId = 0;
+QString Configuration::organizationName = "";
+int Configuration::status = 0;
+int Configuration::organizationStatus = 0;
 QString Configuration::username = "";
 QString Configuration::password = "";
 int Configuration::posX = -1;
@@ -215,7 +221,7 @@ void Configuration::Init()
 
 void Configuration::BeforeQuit()
 {
-	qDebug() << "write";
+	qDebug() << "Call BeforeQuit";
 	m.lockForRead();
 	QSettings conf(QCoreApplication::applicationDirPath() + "/conf/ccs.ini", QSettings::IniFormat);
 	conf.setValue("autoSign", autoSign);
@@ -321,6 +327,78 @@ void Configuration::SetAutoSign(bool res)
 QString Configuration::ServerAddress()
 {
 	return serverAddress;
+}
+
+int Configuration::UserId()
+{
+	return userid;
+}
+
+void Configuration::SetUserId(int id)
+{
+	m.lockForWrite();
+	userid = id;
+	m.unlock();
+}
+
+int Configuration::Power()
+{
+	return power;
+}
+
+void Configuration::SetPower(int pow)
+{
+	m.lockForWrite();
+	power = pow;
+	m.unlock();
+}
+
+int Configuration::OrganizationId()
+{
+	return organizationId;
+}
+
+void Configuration::SetOrganizationId(int id)
+{
+	m.lockForWrite();
+	organizationId = id;
+	m.unlock();
+}
+
+QString Configuration::OrganizationName()
+{
+	return organizationName;
+}
+
+void Configuration::SetOrganizationName(QString name)
+{
+	m.lockForWrite();
+	organizationName = name;
+	m.unlock();
+}
+
+int Configuration::Status()
+{
+	return status;
+}
+
+void Configuration::SetStatus(int sta)
+{
+	m.lockForWrite();
+	status = sta;
+	m.unlock();
+}
+
+int Configuration::OrganizationStatus()
+{
+	return organizationStatus;
+}
+
+void Configuration::SetOrganizationStatus(int sta)
+{
+	m.lockForWrite();
+	organizationStatus = sta;
+	m.unlock();
 }
 
 QString Configuration::Username()

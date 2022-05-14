@@ -164,7 +164,7 @@ void Volume::InitNtfs()
 
 void Volume::InitOther()
 {
-	qDebug() << "Volume ReInit using local" << volume;
+	//QDebug() << "Volume ReInit using local" << volume;
 	QString rootName = QString("%1:\\").arg(volume);
 	filesystem::path rootPath = filesystem::path(rootName.toStdString());
 	if (!filesystem::exists(rootPath))
@@ -238,7 +238,7 @@ void Volume::ReInit(char c)
 	LOG(INFO) << QStringLiteral("重新读取磁盘 %1").arg(volume);
 	if ((attribute & VOLUME_IS_NTFS) && isOk == false)
 	{
-		qDebug() << "Volume ReInit using ntfs" << volume;
+		//QDebug() << "Volume ReInit using ntfs" << volume;
 		fileMap.clear();
 		fileMap.insert(0x5000000000005UL, { 0UL, QString("%1:").arg(volume),1 });
 		InitNtfs();
@@ -254,7 +254,7 @@ void Volume::ReInit(char c)
 
 void Volume::FindFile(QVariant str)
 {
-	qDebug() << "Call FindFile";
+	//QDebug() << "Call FindFile";
 	if (!isOk && (attribute & VOLUME_USEING) == 0)
 	{
 		emit FindRes(volume);
@@ -357,7 +357,7 @@ void Volume::AutoUpdate()
 	if ((attribute & VOLUME_IS_NTFS) && (attribute & VOLUME_USEING))
 	{
 		emit BeginUpdate();
-		qDebug() << "Call AutoUpdate";
+		//QDebug() << "Call AutoUpdate";
 		isOk = false;
 		fileMap.clear();
 		fileMap.insert(0x5000000000005UL, { 0UL, QString("%1:").arg(volume),1 });
@@ -496,7 +496,7 @@ FileSystem::FileSystem()
 
 void FileSystem::getFileSystem(char c)
 {
-	qDebug() << "GetFileSystem" << c;
+	//QDebug() << "GetFileSystem" << c;
 	QString lpRootPathName = QString("%1:\\").arg(c);
 	char lpVolumeNameBuffer[MAX_PATH];
 	DWORD lpVolumeSerialNumber;
@@ -528,7 +528,7 @@ void FileSystem::getFileSystem(char c)
 
 void FileSystem::Init()
 {
-	qDebug() << "FileSystem Init";
+	//QDebug() << "FileSystem Init";
 	QTime time;
 	char dirveBuf[1000];
 	memset(dirveBuf, 0, 1000);

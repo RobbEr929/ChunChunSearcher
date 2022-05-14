@@ -3,14 +3,8 @@
 #include "global.h"
 #include <QObject>
 #include <QAbstractTableModel>
-
+#include <QStringList>
 using namespace ccs;
-
-struct ModelItem
-{
-	QString name;
-	QString path;
-};
 
 class MyTableModel : public QAbstractTableModel
 {
@@ -22,14 +16,15 @@ public:
 	int columnCount(const QModelIndex& parent = QModelIndex())const override;
 	QVariant data(const QModelIndex& index, int role = Qt::DisplayRole)const override;
 	QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
-	void addData(ModelItem& data);
-	void setData(QList<ModelItem>& data);
+	void addData(QStringList& data);
+	void setData(QList<QStringList>& data);
 	void deleteData(const QModelIndex& index);
-	void updateData(const QModelIndex& index, ModelItem& it);
+	void updateData(const QModelIndex& index, QStringList& it);
+	void clear();
 	void setHeader(QStringList& header);
 	bool isVaild(const QModelIndex& index);
-	ModelItem getRowData(const QModelIndex& index)const;
-	QList<ModelItem> getData()const;
+	QStringList getRowData(const QModelIndex& index)const;
+	QList<QStringList> getData()const;
 	QString Name(const QModelIndex& index);
 	QString Path(const QModelIndex& index);
 	QString FullPath(const QModelIndex& index);
@@ -38,7 +33,7 @@ public:
 
 private:
 	bool lessThan(QString& left, QString& right);
-	QList<ModelItem> modelData;
+	QList<QStringList> modelData;
 	QStringList horizontalHead;
 
 public slots:

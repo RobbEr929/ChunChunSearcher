@@ -25,8 +25,7 @@ class WriteConfRequest extends FormRequest
     public function rules()
     {
         return [
-            'username'=>'required',
-            'password'=>'required',
+            'userid'=>'required',
             'confcontent'=>'required'
         ];
     }

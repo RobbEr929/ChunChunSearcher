@@ -11,7 +11,7 @@
 MyTableModel::MyTableModel(QObject* parent)
 	: QAbstractTableModel(parent)
 {
-	modelData = QList<ModelItem>();
+	modelData = QList<QStringList>();
 }
 
 int MyTableModel::rowCount(const QModelIndex& parent) const
@@ -21,47 +21,41 @@ int MyTableModel::rowCount(const QModelIndex& parent) const
 
 int MyTableModel::columnCount(const QModelIndex& parent) const
 {
-	return 2;
+	return horizontalHead.size();
 }
 
 QVariant MyTableModel::data(const QModelIndex& index, int role) const
 {
-	if ( !index.isValid() || index.row() > modelData.count() )
+	if (!index.isValid() || index.row() > modelData.count())
 	{
 		return QVariant();
 	}
-	if ( role == Qt::ToolTipRole || role == Qt::DisplayRole )
+	if (role == Qt::ToolTipRole || role == Qt::DisplayRole)
 	{
-		switch ( index.column() )
-		{
-		case 0:
-			return modelData[index.row()].name;
-		case 1:
-			return modelData[index.row()].path;
-		}
+		return modelData[index.row()][index.column()];
 	}
 	return QVariant();
 }
 
 QVariant MyTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-	if ( role != Qt::DisplayRole )
+	if (role != Qt::DisplayRole)
 		return QAbstractTableModel::headerData(section, orientation, role);
-	if ( orientation == Qt::Horizontal )
+	if (orientation == Qt::Horizontal)
 	{
 		return horizontalHead[section];
 	}
 	return QAbstractItemModel::headerData(section, orientation);
 }
 
-void MyTableModel::addData(ModelItem& data)
+void MyTableModel::addData(QStringList& data)
 {
-	beginResetModel();
+	beginInsertRows(QModelIndex(), rowCount(), rowCount());
 	modelData.push_back(std::move(data));
-	endResetModel();
+	endInsertRows();
 }
 
-void MyTableModel::setData(QList<ModelItem>& data)
+void MyTableModel::setData(QList<QStringList>& data)
 {
 	beginResetModel();
 	modelData = std::move(data);
@@ -70,23 +64,30 @@ void MyTableModel::setData(QList<ModelItem>& data)
 
 void MyTableModel::deleteData(const QModelIndex& index)
 {
-	if ( !isVaild(index) )
+	if (!isVaild(index))
 	{
 		return;
 	}
-	beginResetModel();
+	beginRemoveRows(QModelIndex(), index.row(), index.row());
 	modelData.removeAt(index.row());
-	endResetModel();
+	endRemoveRows();
 }
 
-void MyTableModel::updateData(const QModelIndex& index, ModelItem& it)
+void MyTableModel::updateData(const QModelIndex& index, QStringList& it)
 {
-	if ( !isVaild(index) )
+	if (!isVaild(index))
 	{
 		return;
 	}
 	beginResetModel();
 	modelData[index.row()] = std::move(it);
+	endResetModel();
+}
+
+void MyTableModel::clear()
+{
+	beginResetModel();
+	modelData = QList<QStringList>();
 	endResetModel();
 }
 
@@ -99,23 +100,23 @@ void MyTableModel::setHeader(QStringList& header)
 
 bool MyTableModel::isVaild(const QModelIndex& index)
 {
-	if ( !index.isValid() || index.row() > modelData.count() )
+	if (!index.isValid() || index.row() > modelData.count())
 	{
 		return false;
 	}
 	return true;
 }
 
-QList<ModelItem> MyTableModel::getData() const
+QList<QStringList> MyTableModel::getData() const
 {
 	return modelData;
 }
 
-ModelItem MyTableModel::getRowData(const QModelIndex& index) const
+QStringList MyTableModel::getRowData(const QModelIndex& index) const
 {
-	if ( !index.isValid() || index.row() > modelData.count() )
+	if (!index.isValid() || index.row() > modelData.count())
 	{
-		return ModelItem();
+		return QStringList();
 	}
 	else
 		return modelData[index.row()];
@@ -124,60 +125,50 @@ ModelItem MyTableModel::getRowData(const QModelIndex& index) const
 QString MyTableModel::Name(const QModelIndex& index)
 {
 	qDebug() << "Call Name";
-	if ( !index.isValid() || index.row() > modelData.count() )
+	if (!index.isValid() || index.row() > modelData.count())
 	{
 		return QString();
 	}
-	return modelData[index.row()].name;
+	return modelData[index.row()][0];
 }
 
 QString MyTableModel::Path(const QModelIndex& index)
 {
 	qDebug() << "Call Path ";
-	if ( !index.isValid() || index.row() > modelData.count() )
+	if (!index.isValid() || index.row() > modelData.count() || this->horizontalHead.size() < 2)
 	{
 		return QString();
 	}
-	return modelData[index.row()].path;
+	return modelData[index.row()][1];
 }
 
 QString MyTableModel::FullPath(const QModelIndex& index)
 {
 	qDebug() << "Call FullPath";
-	if ( !index.isValid() || index.row() > modelData.count() )
+	if (!index.isValid() || index.row() > modelData.count() || this->horizontalHead.size() < 2)
 	{
 		return QString();
 	}
-	if ( modelData[index.row()].path.isEmpty() )
-		return modelData[index.row()].name;
+	if (modelData[index.row()][1].isEmpty())
+		return modelData[index.row()][0];
 	else
-		return modelData[index.row()].path % '\\' % modelData[index.row()].name;
+		return modelData[index.row()][1] % '\\' % modelData[index.row()][0];
 }
 
 void MyTableModel::sort(int column, Qt::SortOrder order)
 {
 	beginResetModel();
-	if ( modelData.isEmpty() || column < 0 || column >= columnCount() )
+	if (modelData.isEmpty() || column < 0 || column >= columnCount())
 		return;
-	const bool asc = ( order == Qt::AscendingOrder );
+	const bool asc = (order == Qt::AscendingOrder);
 	std::sort(modelData.begin(), modelData.end(),
-			  [column, asc, this](const ModelItem& left, const ModelItem& right){
-		QString leftVal, rightVal;
-		switch ( column )
-		{
-		case 0:
-			leftVal = left.name;
-			rightVal = right.name;
-			break;
-		case 1:
-			leftVal = left.path;
-			rightVal = right.path;
-			break;
-		}
-		return asc
-			? lessThan(leftVal, rightVal)
-			: lessThan(rightVal, leftVal);
-	});
+		[column, asc, this](const QStringList& left, const QStringList& right) {
+			QString leftVal = left[column];
+			QString rightVal = right[column];
+			return asc
+				? lessThan(leftVal, rightVal)
+				: lessThan(rightVal, leftVal);
+		});
 	endResetModel();
 }
 
@@ -192,22 +183,22 @@ bool MyTableModel::lessThan(QString& left, QString& right)
 void MyTableModel::rowDoubleClicked(const QModelIndex& index)
 {
 	qDebug() << "Call rowDoubleClicked";
-	if ( !index.isValid() || index.row() > modelData.count() )
+	if (!index.isValid() || index.row() > modelData.count() || this->horizontalHead.size() < 2)
 	{
 		return;
 	}
-	if ( modelData[index.row()].path.isEmpty() )
+	if (modelData[index.row()][2].isEmpty())
 	{
-		QFileInfo fileInfo(modelData[index.row()].name);
-		if ( fileInfo.exists() )
+		QFileInfo fileInfo(modelData[index.row()][1]);
+		if (fileInfo.exists())
 		{
 			QDesktopServices::openUrl(QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
 		}
 	}
 	else
 	{
-		QFileInfo fileInfo(modelData[index.row()].path % '\\' % modelData[index.row()].name);
-		if ( fileInfo.exists() )
+		QFileInfo fileInfo(modelData[index.row()][2] % '\\' % modelData[index.row()][1]);
+		if (fileInfo.exists())
 		{
 			QDesktopServices::openUrl(QUrl::fromLocalFile(fileInfo.absoluteFilePath()));
 		}

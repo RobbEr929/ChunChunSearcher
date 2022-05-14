@@ -374,8 +374,10 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainwindow.cpp" />
     <ClCompile Include="monitor.cpp" />
+    <ClCompile Include="myclient.cpp" />
     <ClCompile Include="mylineedit.cpp" />
     <ClCompile Include="mylistmodel.cpp" />
+    <ClCompile Include="myserver.cpp" />
     <ClCompile Include="mytablemodel.cpp" />
     <ClCompile Include="configuration.cpp" />
   </ItemGroup>
@@ -383,6 +385,8 @@
     <QtMoc Include="communicate.h" />
     <ClInclude Include="easylogging++.h" />
     <ClInclude Include="configuration.h" />
+    <QtMoc Include="myserver.h" />
+    <QtMoc Include="myclient.h" />
     <ClInclude Include="resource.h" />
     <QtMoc Include="mylineedit.h" />
     <QtMoc Include="mylistmodel.h" />

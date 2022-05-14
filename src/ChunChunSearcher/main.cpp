@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
 	QString logPath = QCoreApplication::applicationDirPath() % "/logs";
 	QString logName = QCoreApplication::applicationDirPath() % "/logs/log_%datetime{%Y%M%d}.log";
 	QDir dir;
-	if ( !dir.exists(logPath) )
+	if (!dir.exists(logPath))
 		dir.mkdir(logPath);
 
 	el::Configurations conf;
