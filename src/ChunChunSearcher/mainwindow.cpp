@@ -1841,7 +1841,13 @@ void MainWindow::InitConnect()
 	connect(com, SIGNAL(AppealUserRes(bool)), this, SLOT(AppealUserEvent(bool)));
 	connect(personalTab, &QTabWidget::currentChanged, this, [this](int index)->void
 		{
-			if (index == 1)
+			if (index == 0)
+			{
+				emit GetUserInfo();
+				ClearModelExcept();
+				UpdatePersonal();
+			}
+			else if (index == 1)
 			{
 				emit ShowUserFile();
 				ClearModelExcept(1);
@@ -1873,6 +1879,11 @@ void MainWindow::InitConnect()
 		{
 			switch (index)
 			{
+			case 0:
+				emit GetUserInfo();
+				ClearModelExcept();
+				UpdateOrganization();
+				break;
 			case 1:
 				ClearModelExcept(2, 1);
 				emit ShowOrganizationFile();
@@ -1919,6 +1930,8 @@ void MainWindow::InitConnect()
 	connect(com, SIGNAL(AppealFileRes(bool)), this, SLOT(AppealFileEvent(bool)));
 	connect(this, SIGNAL(DeleteUserFile(int)), com, SLOT(DeleteUserFile(int)));
 	connect(com, SIGNAL(DeleteUserFileRes(bool)), this, SLOT(DeleteUserFileEvent(bool)));
+	connect(this, SIGNAL(DeleteOrganizationFile(int)), com, SLOT(DeleteOrganizationFile(int)));
+	connect(com, SIGNAL(DeleteOrganizationFileRes(bool)), this, SLOT(DeleteOrganizationFileEvent(bool)));
 	connect(closeFileButton, SIGNAL(clicked()), this, SLOT(CloseFileOperatorEvent()));
 
 	//Admin
@@ -2004,6 +2017,7 @@ void MainWindow::InitConnect()
 	connect(sendMessageButton, SIGNAL(clicked()), this, SLOT(SendOutMessage()));
 	connect(client, SIGNAL(Connected()), this, SLOT(BeginConversation()));
 	connect(client, SIGNAL(Message(QString)), this, SLOT(AddRowInClientModel(QString)));
+	connect(client, SIGNAL(ClientError()), this, SLOT(ClientErrorEvent()));
 }
 
 void MainWindow::Show()
@@ -3121,6 +3135,7 @@ void MainWindow::LeaveOrganizationEvent(bool res)
 {
 	if (res)
 	{
+		UpdateOrganization();
 		emit GetOrganizationMembers();
 		QMessageBox::information(personal, QStringLiteral("用户离开组织成功"), QStringLiteral("用户离开组织成功"), QMessageBox::Ok);
 	}
@@ -3158,7 +3173,7 @@ void MainWindow::AppealFileEvent(bool res)
 	}
 	else
 	{
-		appealFileLab->setEnabled(true);
+		appealFileButton->setEnabled(true);
 		QMessageBox::information(operatorFile, QStringLiteral("申诉失败"), QStringLiteral("申诉失败，请检查网络后重试"), QMessageBox::Ok);
 	}
 }
@@ -3387,7 +3402,7 @@ void MainWindow::OperatorFile()
 				{
 				case QMessageBox::Yes:
 					operatorFile->setProperty("doing", true);
-					emit DeleteUserFile(fileid);
+					emit DeleteOrganizationFile(fileid);
 					downLoadFileButton->setEnabled(false);
 					appealFileButton->setEnabled(false);
 				}
@@ -3419,11 +3434,26 @@ void MainWindow::DeleteUserFileEvent(bool res)
 	{
 		emit ShowUserFile();
 		operatorFile->setVisible(false);
-		QMessageBox::information(personal, QStringLiteral("删除成功"), QStringLiteral("删除成功"), QMessageBox::Ok);
+		QMessageBox::information(operatorFile, QStringLiteral("删除成功"), QStringLiteral("删除成功"), QMessageBox::Ok);
 	}
 	else
 	{
-		QMessageBox::information(personal, QStringLiteral("删除失败"), QStringLiteral("删除失败，请检查网络后重试"), QMessageBox::Ok);
+		QMessageBox::information(operatorFile, QStringLiteral("删除失败"), QStringLiteral("删除失败，请检查网络后重试"), QMessageBox::Ok);
+	}
+}
+
+void MainWindow::DeleteOrganizationFileEvent(bool res)
+{
+	operatorFile->setProperty("doing", false);
+	if (res)
+	{
+		emit ShowOrganizationFile();
+		operatorFile->setVisible(false);
+		QMessageBox::information(operatorFile, QStringLiteral("删除成功"), QStringLiteral("删除成功"), QMessageBox::Ok);
+	}
+	else
+	{
+		QMessageBox::information(operatorFile, QStringLiteral("删除失败"), QStringLiteral("删除失败，请检查网络后重试"), QMessageBox::Ok);
 	}
 }
 
@@ -3499,6 +3529,8 @@ void MainWindow::OperatorOrganizationMembers()
 	operatorMember->setWindowTitle(username);
 	nowPoweLab->setText(Power(power));
 
+	disconnect(upPowerButton, 0, 0, 0);
+	disconnect(lowPowerButton, 0, 0, 0);
 	if (Configuration::Power() < 4)
 	{
 		upPowerButton->setEnabled(false);
@@ -3672,7 +3704,7 @@ void MainWindow::DissolveOrganizationEvnet(bool res)
 	qDebug() << "Call MainThread DissolveOrganizationEvnet";
 	if (res)
 	{
-		emit GetUserInfo();
+		UpdateOrganization();
 		QMessageBox::information(personal, QStringLiteral("解散组织成功"), QStringLiteral("解散组织成功"), QMessageBox::Ok);
 	}
 	else
@@ -3696,7 +3728,7 @@ void MainWindow::ShowAppealOrganizationEvent(QJsonArray obj)
 		QPushButton* operatorButton = new QPushButton(QStringLiteral("操作"));
 		operatorButton->setProperty("userid", ob.value("userid").toInt());
 		operatorButton->setProperty("username", ob.value("username").toString());
-		if (Configuration::Power() < 3)
+		if (Configuration::Power() < 3 || Configuration::OrganizationStatus() != 0)
 			operatorButton->setEnabled(false);
 		connect(operatorButton, SIGNAL(clicked()), this, SLOT(OperatorAppealMembers()));
 		organizationAppealView->setIndexWidget(organizationAppealModel->index(i, 2), operatorButton);
@@ -4212,6 +4244,7 @@ void MainWindow::CloseServerEvent(bool)
 	serverPortButton->setText(QStringLiteral("监听"));
 	serverPortButton->setEnabled(true);
 	serverPortEdit->setEnabled(true);
+	connectCountLab->setText("0");
 	AddRowInServerModel(QStringLiteral("取消成功"));
 }
 
@@ -4266,4 +4299,16 @@ void MainWindow::BeginConversation()
 	clientButton->setEnabled(true);
 	sendMessageButton->setEnabled(true);
 	clientButton->setText(QStringLiteral("断开连接"));
+}
+
+void MainWindow::ClientErrorEvent()
+{
+	qDebug() << "Call MainThread ClientErrorEvent";
+	AddRowInClientModel(QStringLiteral("发生错误，即将关闭连接"));
+	clientButton->setEnabled(true);
+	clientAddressEdit->setEnabled(true);
+	clientPortEdit->setEnabled(true);
+	clientButton->setText(QStringLiteral("连接"));
+	AddRowInClientModel(QStringLiteral("关闭连接"));
+	emit ClientClose();
 }

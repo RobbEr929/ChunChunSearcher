@@ -93,7 +93,6 @@ void Communicate::LoadError(QNetworkReply::NetworkError error)
 
 void Communicate::LoadProgress(qint64 bytesSent, qint64 bytesTotal)
 {
-	qDebug() << "Call CommunicateThread LoadProgress";
 	emit LoadProgressRes(bytesSent, bytesTotal);
 }
 
@@ -215,6 +214,7 @@ void Communicate::WriteConf()
 
 void Communicate::GetUserInfo()
 {
+	qDebug() << "Call CommunicateThread GetUserInfo";
 	if (Configuration::UserId() == 0)
 	{
 		LOG(INFO) << QStringLiteral("读取个人信息失败");
@@ -999,13 +999,13 @@ void Communicate::RefuseOrganization(int id)
 			const QJsonObject obj = doc.object();
 			if (obj.contains("code") && obj.value("code").toInt() == 200)
 			{
-				emit JoinOrganizationRes(true);
+				emit RefuseOrganizationRes(true);
 				return;
 			}
 		}
 	}
 	LOG(INFO) << QStringLiteral("拒绝加入组织失败");
-	emit JoinOrganizationRes(false);
+	emit RefuseOrganizationRes(false);
 	return;
 }
 
@@ -1052,7 +1052,7 @@ void Communicate::UpLoadUserFile(QString path)
 	QHttpMultiPart* multiPart = new QHttpMultiPart(QHttpMultiPart::FormDataType);
 	QHttpPart idPart;
 	idPart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"userid\";"));
-	idPart.setBody(QString::number(Configuration::OrganizationId()).toLatin1());
+	idPart.setBody(QString::number(Configuration::UserId()).toLatin1());
 	QHttpPart namePart;
 	namePart.setHeader(QNetworkRequest::ContentDispositionHeader, QVariant("form-data; name=\"username\";"));
 	namePart.setBody(Configuration::Username().toUtf8());
@@ -1114,7 +1114,10 @@ void Communicate::DownLoadFile(int id)
 	QString filePath = downloadPath % "/tmp.file";
 	QDir dir;
 	if (!dir.exists(downloadPath))
-		dir.mkdir(downloadPath);
+	{
+		if (!dir.mkdir(downloadPath))
+			LOG(INFO) << QStringLiteral("无法创建%1/download文件夹，请手动创建").arg(QApplication::applicationDirPath());
+	}
 
 	QString url = Configuration::ServerAddress() % "downloadfile?fileid=" % QString::number(id);
 	QNetworkRequest request;

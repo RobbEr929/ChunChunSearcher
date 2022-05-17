@@ -25,6 +25,7 @@ void MyServer::Close()
 		i->close();
 		i->deleteLater();
 	}
+	sockets.clear();
 	server->close();
 	server->deleteLater();
 	emit CloseRes(true);

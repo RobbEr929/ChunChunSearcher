@@ -49,16 +49,7 @@ void MyClient::DisConnect()
 void MyClient::Error(QAbstractSocket::SocketError error)
 {
 	qDebug() << "Call ClientThread Error";
-	switch (error)
-	{
-	case QAbstractSocket::RemoteHostClosedError:
-	{
-		qDebug() << "Call ClientThread RemoteHostClosedError";
-		break;
-	}
-	default:
-		break;
-	}
+	emit ClientError();
 }
 
 void MyClient::Init()

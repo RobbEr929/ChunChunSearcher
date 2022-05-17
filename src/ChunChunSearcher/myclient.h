@@ -25,6 +25,7 @@ signals:
 	void Connected();
 	void Closed();
 	void Message(QString str);
+	void ClientError();
 
 private:
 	QTcpSocket* client;

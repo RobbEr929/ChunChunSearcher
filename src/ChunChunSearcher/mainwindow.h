@@ -166,6 +166,7 @@ signals:
 	void AppealFile(int id);
 	void ResetFile(int id);
 	void DeleteUserFile(int id);
+	void DeleteOrganizationFile(int id);
 	void CreateOrganization(QString);
 	void LeaveOrganization(int id);
 	void DissolveOrganization(int id);
@@ -256,6 +257,7 @@ public slots:
 	void OperatorFile();
 	void DownLoadFileEvent(bool res);
 	void DeleteUserFileEvent(bool res);
+	void DeleteOrganizationFileEvent(bool res);
 	void CloseFileOperatorEvent();
 	void CloseMemberOperatorEvent();
 	void DownLoadProgressEvent(qint64 bytesSent, qint64 bytesTotal);
@@ -305,6 +307,7 @@ public slots:
 	void AddRowInClientModel(QString str);
 	void SendOutMessage();
 	void BeginConversation();
+	void ClientErrorEvent();
 };
 
 #endif // MAINWINDOW_H

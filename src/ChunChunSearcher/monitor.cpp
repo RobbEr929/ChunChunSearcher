@@ -14,8 +14,9 @@ Monitor::Monitor()
 
 void Monitor::AddPath(QString path)
 {
+	qDebug() << "Call MonitorThread AddPath";
 	QFileInfo info(path);
-	if ( info.isDir() )
+	if (info.isDir())
 	{
 		watcher->addPath(path);
 		const QDir dir(path);
@@ -26,8 +27,9 @@ void Monitor::AddPath(QString path)
 
 void Monitor::RemovePath(QString path)
 {
+	qDebug() << "Call MonitorThread RemovePath";
 	QFileInfo info(path);
-	if ( info.isDir() )
+	if (info.isDir())
 	{
 		watcher->removePath(path);
 		const QDir dir(path);
@@ -38,6 +40,7 @@ void Monitor::RemovePath(QString path)
 
 void Monitor::DiretoryModified(const QString& path)
 {
+	qDebug() << "Call MonitorThread DiretoryModified";
 	qDebug() << QString("Directory updated: %1").arg(path);
 	QStringList nowList = fileList[path];
 	const QDir dir(path);
@@ -55,9 +58,9 @@ void Monitor::DiretoryModified(const QString& path)
 
 	fileList[path] = newList;
 
-	if ( !newFile.isEmpty() && !delFile.isEmpty() )
+	if (!newFile.isEmpty() && !delFile.isEmpty())
 	{
-		if ( ( newFile.count() == 1 ) && ( delFile.count() == 1 ) )
+		if ((newFile.count() == 1) && (delFile.count() == 1))
 		{
 			qDebug() << QString("%1 Renamed %2").arg(delFile.first()).arg(newFile.first());
 			emit SomeRenamed(path % '*' % delFile.first() % '*' % newFile.first());
@@ -65,7 +68,7 @@ void Monitor::DiretoryModified(const QString& path)
 	}
 	else
 	{
-		if ( !newFile.isEmpty() )
+		if (!newFile.isEmpty())
 		{
 			foreach(QString file, newFile)
 			{
@@ -73,7 +76,7 @@ void Monitor::DiretoryModified(const QString& path)
 				emit SomeCreated(path % '*' % file);
 			}
 		}
-		if ( !delFile.isEmpty() )
+		if (!delFile.isEmpty())
 		{
 			qDebug() << "Deleted: " << delFile;
 			foreach(QString file, delFile)

@@ -6,7 +6,7 @@
 #include <QFile>
 bool Configuration::isSigned = false;
 bool Configuration::autoSign = false;
-QString Configuration::serverAddress = "";
+QString Configuration::serverAddress = "http://47.95.214.101:929/api/ccs/";
 int Configuration::userid = 0;
 int Configuration::power = 0;
 int Configuration::organizationId = 0;

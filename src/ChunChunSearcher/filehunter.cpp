@@ -81,6 +81,7 @@ QVector<QPair<QString, QString>>& Volume::RightFile()
 
 void Volume::InitNtfs()
 {
+	qDebug() << "Call VolumeThread InitNtfs";
 	QString rootName = QString("\\\\.\\%1:").arg(volume);
 	HANDLE hVol = CreateFileA(rootName.toStdString().c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
 	if (hVol == INVALID_HANDLE_VALUE)
@@ -164,7 +165,7 @@ void Volume::InitNtfs()
 
 void Volume::InitOther()
 {
-	//QDebug() << "Volume ReInit using local" << volume;
+	qDebug() << "Call VolumeThread InitOther";
 	QString rootName = QString("%1:\\").arg(volume);
 	filesystem::path rootPath = filesystem::path(rootName.toStdString());
 	if (!filesystem::exists(rootPath))
@@ -211,6 +212,7 @@ void Volume::GetPath(qulonglong ref, QString& path)
 
 void Volume::Init()
 {
+	qDebug() << "Call VolumeThread Init";
 	fileMap.clear();
 	fileMap.insert(0x5000000000005UL, { 0UL, QString("%1:").arg(volume),1 });
 	if ((attribute & VOLUME_IS_NTFS) && (attribute & VOLUME_USEING))
@@ -230,6 +232,7 @@ void Volume::Init()
 
 void Volume::ReInit(char c)
 {
+	qDebug() << "Call VolumeThread ReInit";
 	if (volume != c || attribute & VOLUME_USEING)
 	{
 		return;
@@ -254,7 +257,7 @@ void Volume::ReInit(char c)
 
 void Volume::FindFile(QVariant str)
 {
-	//QDebug() << "Call FindFile";
+	qDebug() << "Call VolumeThread FindFile";
 	if (!isOk && (attribute & VOLUME_USEING) == 0)
 	{
 		emit FindRes(volume);
@@ -354,10 +357,10 @@ void Volume::FindFile(QVariant str)
 
 void Volume::AutoUpdate()
 {
+	qDebug() << "Call VolumeThread AutoUpdate";
 	if ((attribute & VOLUME_IS_NTFS) && (attribute & VOLUME_USEING))
 	{
 		emit BeginUpdate();
-		//QDebug() << "Call AutoUpdate";
 		isOk = false;
 		fileMap.clear();
 		fileMap.insert(0x5000000000005UL, { 0UL, QString("%1:").arg(volume),1 });
@@ -368,6 +371,7 @@ void Volume::AutoUpdate()
 
 void Volume::RemoveData(char c)
 {
+	qDebug() << "Call VolumeThread RemoveData";
 	if (c == volume)
 	{
 		attribute = attribute & 0b11 | VOLUME_DISCARD;
@@ -380,6 +384,7 @@ void Volume::RemoveData(char c)
 
 void Volume::SomeCreated(QString path)
 {
+	qDebug() << "Call VolumeThread SomeCreated";
 	char vol = path[0].toLatin1();
 	if (vol == volume)
 	{
@@ -439,6 +444,7 @@ void Volume::SomeCreated(QString path)
 
 void Volume::SomeDeleted(QString path)
 {
+	qDebug() << "Call VolumeThread SomeDeleted";
 	char vol = path[0].toLatin1();
 	if (vol == volume)
 	{
@@ -466,6 +472,7 @@ void Volume::SomeDeleted(QString path)
 
 void Volume::SomeRenamed(QString path)
 {
+	qDebug() << "Call VolumeThread SomeRenamed";
 	char vol = path[0].toLatin1();
 	if (vol == volume)
 	{
@@ -496,7 +503,7 @@ FileSystem::FileSystem()
 
 void FileSystem::getFileSystem(char c)
 {
-	//QDebug() << "GetFileSystem" << c;
+	qDebug() << "Call FileSystemThread getFileSystem";
 	QString lpRootPathName = QString("%1:\\").arg(c);
 	char lpVolumeNameBuffer[MAX_PATH];
 	DWORD lpVolumeSerialNumber;
@@ -528,7 +535,7 @@ void FileSystem::getFileSystem(char c)
 
 void FileSystem::Init()
 {
-	//QDebug() << "FileSystem Init";
+	qDebug() << "Call FileSystemThread Init";
 	QTime time;
 	char dirveBuf[1000];
 	memset(dirveBuf, 0, 1000);
